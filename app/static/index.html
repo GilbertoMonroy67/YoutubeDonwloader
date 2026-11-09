@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Video Downloader</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main>
+    <h1>Video Downloader</h1>
+    <p class="sub">YouTube, reels de Facebook e Instagram. Calidad original, sin recodificar. Video completo o solo el fragmento que necesitas.</p>
+
+    <form id="search-form" class="search">
+      <input id="url" type="url" placeholder="Pega el enlace de YouTube, Facebook o Instagram" required autocomplete="off">
+      <button type="submit" id="search-btn">Buscar</button>
+    </form>
+    <p id="search-error" class="error" hidden></p>
+
+    <section id="video" class="card" hidden>
+      <div class="preview">
+        <div id="yt-wrap"><div id="player"></div></div>
+        <video id="native-player" controls playsinline preload="metadata" referrerpolicy="no-referrer" hidden></video>
+        <img id="thumb" alt="" referrerpolicy="no-referrer" hidden>
+      </div>
+      <h2 id="title"></h2>
+      <p id="meta" class="muted"></p>
+
+      <form id="download-form" class="options">
+        <fieldset>
+          <legend>Tipo</legend>
+          <label><input type="radio" name="mode" value="video" checked> Video</label>
+          <label><input type="radio" name="mode" value="audio"> Solo audio</label>
+        </fieldset>
+
+        <div class="row video-only">
+          <label>Calidad
+            <select id="height"></select>
+          </label>
+          <label>Formato
+            <select id="container">
+              <option value="mp4">MP4 (compatible con editores)</option>
+              <option value="mkv">MKV (máxima calidad, AV1/VP9)</option>
+            </select>
+          </label>
+        </div>
+
+        <fieldset>
+          <legend>¿Qué descargar?</legend>
+          <label><input type="radio" name="range" value="full" checked> Video completo</label>
+          <label><input type="radio" name="range" value="fragment"> Solo un fragmento</label>
+        </fieldset>
+
+        <div id="fragment" class="fragment" hidden>
+          <p class="muted">Busca el momento en el reproductor y márcalo, o escribe el tiempo (ej. 1:23 o 1:02:30).</p>
+          <div class="row">
+            <label>Inicio
+              <span class="time-input">
+                <input id="start" placeholder="0:00">
+                <button type="button" data-mark="start">Marcar actual</button>
+              </span>
+            </label>
+            <label>Fin
+              <span class="time-input">
+                <input id="end" placeholder="0:30">
+                <button type="button" data-mark="end">Marcar actual</button>
+              </span>
+            </label>
+          </div>
+          <label class="check video-only">
+            <input type="checkbox" id="exact">
+            <span><strong>Corte exacto al segundo.</strong> Recodifica en alta calidad (H.264 CRF 16 + AAC 320k) y tarda más.
+            Sin marcarlo, el corte es instantáneo y sin pérdida, pero puede empezar unos segundos antes.</span>
+          </label>
+        </div>
+
+        <p id="download-error" class="error" hidden></p>
+        <button type="submit" class="primary">Descargar</button>
+      </form>
+    </section>
+
+    <section id="jobs-section" hidden>
+      <h2>Descargas</h2>
+      <ul id="jobs"></ul>
+      <p class="muted">También se guardan en la carpeta <code>descargas/</code> del proyecto.</p>
+    </section>
+
+    <details class="help">
+      <summary>Videos con restricción de edad o que piden iniciar sesión · <span id="cookies-status">…</span></summary>
+      <p>YouTube solo muestra esos videos a una cuenta con sesión iniciada. La app puede usar
+        tu sesión mediante un archivo <code>cookies.txt</code>:</p>
+      <ol>
+        <li>Instala la extensión <strong>Get cookies.txt LOCALLY</strong> (código abierto) en tu navegador.</li>
+        <li>Abre una <strong>ventana de incógnito</strong> e inicia sesión en YouTube (mejor con una cuenta secundaria, mayor de edad).</li>
+        <li>En esa ventana, ve a youtube.com, exporta las cookies con la extensión y <strong>cierra la ventana</strong>
+          (sin cerrar sesión, para que YouTube no las invalide).</li>
+        <li>Guarda el archivo como <code>cookies.txt</code> en la carpeta del proyecto (junto a <code>run.sh</code>).
+          No hace falta reiniciar.</li>
+      </ol>
+      <p class="muted">Sirve también para Instagram y Facebook: exporta sus cookies y pégalas al final del mismo archivo.
+        El archivo equivale a tu contraseña: no lo compartas. Las cookies caducan; si vuelve el error, expórtalas de nuevo.</p>
+    </details>
+  </main>
+
+  <script src="app.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
